@@ -4,13 +4,15 @@ from data_reader import DataReader
 
 
 def plot(y, y_pred):
-    plt.plot(y, label="Original")
-    plt.plot(y_pred, 'r', label="Prediction" )
+    x = range(len(y))
+    plt.scatter(x, y)
+    plt.scatter(x, y_pred)
     plt.legend()
     plt.show()
 
 def plot_band(y):
-    plt.plot(y, label="Reflectance")
+    x = range(len(y))
+    plt.scatter(x, y)
 
 if __name__ == "__main__":
     _,y_train,_, y_test = DataReader().get_data()

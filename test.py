@@ -12,14 +12,19 @@ from data_reader import DataReader
 
 def test():
     model = Machine()
+    criterion = torch.nn.MSELoss(reduction='mean')
     #if not os.path.isfile("models/machine.h5"):
-    train.train()
+    #train.train()
     model = torch.load("models/machine.h5")
 
     dr = DataReader()
     _, _, x_test, y_test = dr.get_data()
+    y_test = y_test.reshape(-1, 1)
     y_test_pred = model(x_test)
-    plotter.plot(y_test.detach().numpy(), y_test_pred.detach().numpy())
+    loss = criterion(y_test_pred, y_test).item()
+    print(f"Test Loss {loss:.2f}")
+
+    #plotter.plot(y_test.detach().numpy(), y_test_pred.detach().numpy())
 
 
 if __name__ == "__main__":
