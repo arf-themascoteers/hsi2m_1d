@@ -1,13 +1,14 @@
 import torch
 import torch.nn as nn
 
-class Machine(nn.Module):
+
+class ConciseMachine(nn.Module):
     def __init__(self):
-        super(Machine, self).__init__()
+        super(ConciseMachine, self).__init__()
         self.fc = nn.Sequential(
-            nn.Linear(125,16),
+            nn.Linear(16,8),
             nn.LeakyReLU(),
-            nn.Linear(16,1)
+            nn.Linear(8,1)
         )
 
     def forward(self, x):

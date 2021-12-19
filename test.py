@@ -19,6 +19,7 @@ def test():
 
     dr = DataReader()
     _, _, x_test, y_test = dr.get_data()
+    x_test = x_test.reshape(x_test.shape[0], -1)
     y_test = y_test.reshape(-1, 1)
     y_test_pred = model(x_test)
     loss = criterion(y_test_pred, y_test).item()

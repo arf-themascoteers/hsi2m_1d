@@ -29,6 +29,13 @@ class DataReader:
     def get_data(self):
         return self.x_train, self.y_train, self.x_test, self.y_test
 
+    def get_concise_data(self):
+        return self.x_train[:,:,1:17], self.y_train, self.x_test[:,:,1:17], self.y_test
+
+    def get_junk_data(self):
+        return self.x_train[:,:,34:50], self.y_train, self.x_test[:,:,34:50], self.y_test
+
+
     def get_actual_bands(self):
         return self.bands[:,0,:]
 

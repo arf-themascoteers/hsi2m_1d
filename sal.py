@@ -9,9 +9,8 @@ def test(model, data, y_true):
     data.requires_grad = True
     y_pred = model(data)
     loss = criterion(y_pred, y_true)
-    accuracy = 1/loss
-    accuracy.backward()
-    x = model.la
+    loss.backward()
+    x = torch.abs(data.grad)
     std = torch.std(x)
     mean = torch.mean(x)
 
@@ -20,6 +19,8 @@ def test(model, data, y_true):
     x = x.squeeze().squeeze()
     plt.plot(x)
     plt.show()
+    xnp = x.numpy()
+    print(xnp)
 
 if __name__ == "__main__":
     model = torch.load("models/machine.h5")
@@ -27,6 +28,7 @@ if __name__ == "__main__":
     model.eval()
     dr = DataReader()
     _, _, x_test, y_test = dr.get_data()
+    x_test = x_test.reshape(x_test.shape[0], -1)
     y_test = y_test.reshape(-1, 1)
     items = 0
     for i in range(len(y_test)):
@@ -34,7 +36,7 @@ if __name__ == "__main__":
         current_y = y_test[i].unsqueeze(dim=0)
         y_test_pred = model(current_x)
         loss = criterion(y_test_pred, current_y).item()
-        if loss < 0.1:
+        if loss < 0.02:
             test(model, current_x, current_y)
             items += 1
             if items >= 5:
