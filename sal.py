@@ -12,14 +12,15 @@ def train():
     x_train, y_train, _, _ = dr.get_data()
     x_train = x_train.reshape(x_train.shape[0], -1)
     y_train = y_train.reshape(-1,1)
-    for t in range(300):
+    for t in range(100):
         y_train_pred = model(x_train)
         loss = criterion(y_train_pred, y_train)
-        print("Epoch ", t, "MSE: ", loss.item())
+        #print("Epoch ", t, "MSE: ", loss.item())
         optimiser.zero_grad()
         loss.backward()
         optimiser.step()
 
+    print(f"Train Loss {loss.item():.2f}")
     torch.save(model, "models/machine.h5")
 
 
@@ -40,14 +41,15 @@ def test():
 
 
 def gen_sal(data, y_true):
+    print("Generating saliency")
+    criterion = torch.nn.MSELoss(reduction='mean')
     model = torch.load("models/machine.h5")
     model.train()
     data = data.clone()
     data.requires_grad = True
     y_pred = model(data)
     loss = criterion(y_pred, y_true)
-    accuracy = 1/loss
-    accuracy.backward()
+    loss.backward()
     x = torch.abs(data.grad)
 
     std = torch.std(x)
@@ -76,10 +78,10 @@ if __name__ == "__main__":
         current_y = y_test[i].unsqueeze(dim=0)
         y_test_pred = model(current_x)
         loss = criterion(y_test_pred, current_y).item()
-        if loss < 0.02:
+        if loss < 0.1:
             gen_sal(current_x, current_y)
             items += 1
-            if items >= 5:
+            if items >= 10:
                 break
 
 
